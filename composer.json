@@ -1,0 +1,31 @@
+{
+    "name": "kommai/http",
+    "description": "The kommai HTTP stuff",
+    "type": "library",
+    "homepage": "https://github.com/kommai/http",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "The Kommai Toolkit",
+            "email": "dev@kommai.app"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "kommai/testkit": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kommai\\Http\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kommai/testkit"
+        }
+    ]
+}
