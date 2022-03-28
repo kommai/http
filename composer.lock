@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "dad3951854989198a70345b25c0b6c58",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "kommai/testkit",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kommai/testkit.git",
+                "reference": "eefc852d0a4aa630848ce985296a511f98cf2fdf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kommai/testkit/zipball/eefc852d0a4aa630848ce985296a511f98cf2fdf",
+                "reference": "eefc852d0a4aa630848ce985296a511f98cf2fdf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kommai\\TestKit\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "The Kommai Toolkit",
+                    "email": "dev@kommai.app"
+                }
+            ],
+            "description": "The kommai test kit",
+            "homepage": "https://github.com/kommai/testkit",
+            "support": {
+                "source": "https://github.com/kommai/testkit/tree/main",
+                "issues": "https://github.com/kommai/testkit/issues"
+            },
+            "time": "2022-03-27T01:09:54+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "kommai/testkit": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=8.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
+}
