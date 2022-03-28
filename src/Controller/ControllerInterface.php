@@ -9,5 +9,5 @@ use Kommai\Http\Response;
 
 interface ControllerInterface
 {
-    //public function redirect(Request $request, string $url, int $status = Response::STATUS_FOUND): Response;
+    public function redirect(Request $request, string $url, int $status = Response::STATUS_FOUND): Response;
 }

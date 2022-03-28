@@ -33,9 +33,21 @@ class Server
         $this->errorController = $errorController;
     }
 
+    private function route(Request $request): ?Route
+    {
+        $routes = array_reverse($this->routes);
+        foreach ($routes as $route) {
+            if ($route->matches($request->method, $request->url)) {
+                return $route;
+            }
+        }
+        return null;
+    }
+
     private function handleRequest(Request $request): Response
     {
         try {
+            // TODO: replace this part with route() method
             $routes = array_reverse($this->routes);
             foreach ($routes as $route) {
                 if ($route->matches($request->method, $request->url)) {
@@ -47,6 +59,12 @@ class Server
             if (!isset($routeMatched)) {
                 return $this->errorController->error($request, new NotFoundException('No route matched'));
             }
+
+
+
+
+
+
             try {
                 if (!empty($this->middlewares)) {
                     for ($depth = 0; $depth < count($this->middlewares); $depth++) {
