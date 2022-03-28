@@ -43,11 +43,9 @@ class ExampleMiddleware2 implements MiddlewareInterface
 {
     use MiddlewareTrait;
 
-    public function _processRequest(Request $request): Request
+    public function processRequest(Request $request): Request
     {
-        //var_dump($request->headers);
         if (!isset($request->headers['X-Country']) || strtoupper($request->headers['X-Country']) !== 'JAPAN') {
-            echo 'OMAKUNI', PHP_EOL;
             throw new ForbiddenException('Unavailable in your country');
         }
         return $request;
@@ -77,23 +75,23 @@ class ExampleErrorController implements ErrorControllerInterface
 }
 
 $routes = [
-    new Route('GET', '/\A\z/', new ExampleController1(), 'hello-x'),
+    new Route('GET', '/\A\z/', new ExampleController1(), 'hello'),
 ];
 
 $middlewares = [
-    //new ExampleMiddleware1(),
-    //new ExampleMiddleware2(),
+    new ExampleMiddleware1(),
+    new ExampleMiddleware2(),
 ];
 
 $server = new Server($routes, $middlewares, new ExampleErrorController());
 $serverProxy = new Proxy($server);
 
 $fakeRequest = new Request('GET', '/', 'FAKE', [
-    //'X-Country' => 'Japan',
+    'X-Country' => 'Japan',
     //'X-Country' => 'Canada',
 ]);
 
-var_dump($serverProxy->handleRequest($fakeRequest));
+//var_dump($serverProxy->handleRequest($fakeRequest));
 //var_dump($serverProxy->route($fakeRequest));
 
-//$server->run();
+$server->run();
