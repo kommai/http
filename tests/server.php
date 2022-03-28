@@ -93,7 +93,7 @@ $fakeRequest = new Request('GET', '/', 'FAKE', [
     //'X-Country' => 'Canada',
 ]);
 
-//var_dump($serverProxy->handleRequest($fakeRequest));
-var_dump($serverProxy->route($fakeRequest));
+var_dump($serverProxy->handleRequest($fakeRequest));
+//var_dump($serverProxy->route($fakeRequest));
 
 //$server->run();

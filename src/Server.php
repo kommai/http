@@ -46,49 +46,32 @@ class Server
 
     private function handleRequest(Request $request): Response
     {
+        $route = $this->route($request);
+        if (!$route) {
+            return $this->errorController->error($request, new NotFoundException('No route matched'));
+        }
+
         try {
-            // TODO: replace this part with route() method
-            $routes = array_reverse($this->routes);
-            foreach ($routes as $route) {
-                if ($route->matches($request->method, $request->url)) {
-                    /** @var Route $routeMatched */
-                    $routeMatched = $route;
-                    break;
-                }
-            }
-            if (!isset($routeMatched)) {
-                return $this->errorController->error($request, new NotFoundException('No route matched'));
-            }
-
-
-
-
-
-
             try {
-                if (!empty($this->middlewares)) {
-                    for ($depth = 0; $depth < count($this->middlewares); $depth++) {
-                        $request = $this->middlewares[$depth]->processRequest($request);
-                    }
+                for ($depth = 0; $depth < count($this->middlewares); $depth++) {
+                    $request = $this->middlewares[$depth]->processRequest($request);
                 }
-                if (!method_exists($routeMatched->controller, $routeMatched->action)) {
-                    throw new BadMethodCallException(sprintf('Call to an undefined action "%s" on %s', $routeMatched->action, get_class($routeMatched->controller)));
+                if (!method_exists($route->controller, $route->action)) {
+                    throw new BadMethodCallException(sprintf('Call to an undefined action "%s" on %s', $route->action, get_class($route->controller)));
                 }
-                $response = call_user_func([$routeMatched->controller, $routeMatched->action], $request, $routeMatched->params);
+                $response = call_user_func([$route->controller, $route->action], $request, $route->params);
             } catch (HttpException $thrown) {
                 $response = $this->errorController->error($request, $thrown);
             }
-            if (!empty($this->middlewares)) {
-                if ($depth === count($this->middlewares)) {
-                    $depth--;
-                }
-                for (; $depth >= 0; $depth--) {
-                    $response = $this->middlewares[$depth]->processResponse($response);
-                }
+            if ($depth === count($this->middlewares)) {
+                $depth--;
+            }
+            for (; $depth >= 0; $depth--) {
+                $response = $this->middlewares[$depth]->processResponse($response);
             }
             return $response;
         } catch (HttpException $thrown) {
-            return $this->errorController->error($request, new LogicException(sprintf('Stupid throw of an %s', HttpException::class)));
+            return $this->errorController->error($request, new LogicException(sprintf('Stupid throw of an %s', HttpException::class), 0, $thrown));
         } catch (Throwable $thrown) {
             return $this->errorController->error($request, $thrown);
         }
