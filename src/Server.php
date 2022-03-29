@@ -50,7 +50,6 @@ class Server
         if (!$route) {
             return $this->errorController->error($request, new NotFoundException('No route matched'));
         }
-
         try {
             try {
                 for ($depth = 0; $depth < count($this->middlewares); $depth++) {
