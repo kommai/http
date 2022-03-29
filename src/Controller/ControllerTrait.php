@@ -11,8 +11,6 @@ trait ControllerTrait
 {
     public function redirect(Request $request, string $url, int $status = Response::STATUS_FOUND): Response
     {
-        // TODO: implement this
-        $response = new Response();
-        return $response;
+        return new Response($status, ['Location' => $url]);
     }
 }

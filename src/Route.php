@@ -24,6 +24,14 @@ class Route
         return $match !== false;
     }
 
+    private static function normalizeUrl(string $url): string
+    {
+        if (preg_match('/\A\/+\z/', $url) === 1) {
+            return '/';
+        }
+        return rtrim(preg_replace('/\?.*\z/', '', $url), '/');
+    }
+
     public function __construct(string $method, string $pattern, ControllerInterface $controller, string $action)
     {
         $this->method = $method;
@@ -45,7 +53,8 @@ class Route
         if ($this->method !== '*' && strcasecmp($this->method, $method) !== 0) {
             return false;
         }
-        $match = preg_match($this->pattern, trim(preg_replace('/\?.*\z/', '', $url), '/'), $this->params);
+        //$match = preg_match($this->pattern, rtrim(preg_replace('/\?.*\z/', '', $url), '/'), $this->params);
+        $match = preg_match($this->pattern, self::normalizeUrl($url), $this->params);
         array_shift($this->params);
         return $match === 1;
     }
