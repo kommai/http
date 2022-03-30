@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dad3951854989198a70345b25c0b6c58",
-    "packages": [],
+    "content-hash": "417d7bb7607f74ef346a63ddc30fe691",
+    "packages": [
+        {
+            "name": "phptal/phptal",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phptal/PHPTAL.git",
+                "reference": "7329e0160cba01f2d7cb7d0ef3c25736d5b08f5c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phptal/PHPTAL/zipball/7329e0160cba01f2d7cb7d0ef3c25736d5b08f5c",
+                "reference": "7329e0160cba01f2d7cb7d0ef3c25736d5b08f5c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5.4"
+            },
+            "default-branch": true,
+            "bin": [
+                "tools/phptal_lint.php"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPTAL": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1+"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent Bédubourg",
+                    "email": "lbedubourg@motion-twin.com",
+                    "homepage": "http://labe.me"
+                },
+                {
+                    "name": "Kornel Lesiński",
+                    "email": "kornel@geekhood.net",
+                    "homepage": "http://pornel.net/"
+                }
+            ],
+            "description": "PHPTAL is a templating engine for PHP5 that implements Zope Page Templates syntax",
+            "homepage": "http://phptal.org/",
+            "keywords": [
+                "phptal",
+                "template engine",
+                "zope"
+            ],
+            "support": {
+                "issues": "https://github.com/phptal/PHPTAL/issues",
+                "source": "https://github.com/phptal/PHPTAL/tree/master"
+            },
+            "time": "2021-03-27T17:20:34+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "kommai/testkit",
@@ -13,16 +73,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kommai/testkit.git",
-                "reference": "eefc852d0a4aa630848ce985296a511f98cf2fdf"
+                "reference": "1a7fc5c20599ef4923585de4b20752d078ac18e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kommai/testkit/zipball/eefc852d0a4aa630848ce985296a511f98cf2fdf",
-                "reference": "eefc852d0a4aa630848ce985296a511f98cf2fdf",
+                "url": "https://api.github.com/repos/kommai/testkit/zipball/1a7fc5c20599ef4923585de4b20752d078ac18e6",
+                "reference": "1a7fc5c20599ef4923585de4b20752d078ac18e6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=8.0"
             },
             "default-branch": true,
             "type": "library",
@@ -46,7 +106,7 @@
                 "source": "https://github.com/kommai/testkit/tree/main",
                 "issues": "https://github.com/kommai/testkit/issues"
             },
-            "time": "2022-03-27T01:09:54+00:00"
+            "time": "2022-03-30T00:17:45+00:00"
         }
     ],
     "aliases": [],
