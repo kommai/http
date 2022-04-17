@@ -14,7 +14,7 @@ class Request
     public array $inputs; // readonly
     public array $queries; // readonly
     public array $uploads; // readonly Array of Upload instances
-    public array $vars; // readonly
+    public array $env; // readonly
 
     public function __construct(
         string $method,
@@ -25,7 +25,7 @@ class Request
         array $inputs = [],
         array $queries = [],
         array $uploads = [],
-        array $vars = [],
+        array $env = [],
     ) {
         $this->method = $method;
         $this->url = $url;
@@ -35,19 +35,20 @@ class Request
         $this->inputs = $inputs;
         $this->queries = $queries;
         $this->uploads = $uploads;
-        $this->vars = $vars;
+        $this->env = $env;
     }
 
     public static function createFromScratch(
         string $method,
         string $url,
         string $protocol,
+        // TODO $env here?
         array $headers = [],
         array $cookies = [],
         array $inputs = [],
         array $queries = [],
         array $uploads = [],
-        array $vars = [],
+        array $env = [],
     ): self {
         return new self(
             $method,
@@ -58,7 +59,7 @@ class Request
             $inputs,
             $queries,
             $uploads,
-            $vars,
+            $env,
         );
     }
 
@@ -75,13 +76,13 @@ class Request
         $inputs = $_POST;
         $queries = $_GET;
         $uploads = $_FILES;
-        $vars = [];
+        $env = [];
         foreach ($_SERVER as $key => $value) {
             if (strpos($key, 'HTTP_') !== 0) {
-                $vars[$key] = $value;
+                $env[$key] = $value;
             }
         }
-        return new self($method, $url, $protocol, $headers, $cookies, $inputs, $queries, $uploads, $vars);
+        return new self($method, $url, $protocol, $headers, $cookies, $inputs, $queries, $uploads, $env);
     }
 
     public function isGet(): bool
@@ -101,6 +102,6 @@ class Request
 
     public function isHttps(): bool
     {
-        return isset($this->vars['HTTPS']) && strtoupper($this->vars['HTTPS']) === 'ON';
+        return isset($this->env['HTTPS']) && strtoupper($this->env['HTTPS']) === 'ON';
     }
 }
