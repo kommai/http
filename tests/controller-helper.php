@@ -35,7 +35,7 @@ class ExampleController implements ControllerInterface
     public function __construct(ExampleHelper $helper)
     {
         $this->helper = $helper;
-        $this->helper->help($this);
+        //$this->helper->help($this);
     }
 
     public function hello(Request $request): Response
@@ -56,14 +56,27 @@ class ExampleHelper implements HelperInterface
 
     public function goBig(): void
     {
-        var_dump($this->controller);
-        $this->controller->message = strtoupper($this->controller->message);
+        //var_dump($this->controller);
+        //$this->controller->message = strtoupper($this->controller->message);
+        //var_dump(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT));
+        /*
+        $backtraces = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        if (!$backtraces[1]['object'] ?? null instanceof ControllerInterface) {
+            throw new BadMethodCallException('The caller is not a controller');
+        }
+        */
+        /** @var ExampleController $controller */
+        //$controller = $backtraces[1]['object'];
+        //$controller = $this->getController();
+        $controller = $this->controller;
+        var_dump(get_class($controller));
+        $controller->message = strtoupper($controller->message);
     }
 }
 
 $helper = new ExampleHelper();
 $controller = new ExampleController($helper);
-var_dump($controller);
+//var_dump($controller);
 $server = new Server([
     new Route('GET', '/\A\/\z/', $controller, 'hello'),
 ], [], new ExampleErrorController());

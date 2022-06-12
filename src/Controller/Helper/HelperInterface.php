@@ -8,5 +8,5 @@ use Kommai\Http\Controller\ControllerInterface;
 
 interface HelperInterface
 {
-    public function help(ControllerInterface $controller): void;
+    //public function help(ControllerInterface $controller): void;
 }
