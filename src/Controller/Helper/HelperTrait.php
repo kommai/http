@@ -9,50 +9,31 @@ use Kommai\Http\Controller\ControllerInterface;
 
 trait HelperTrait
 {
-    /*
-    private ?ControllerInterface $controller = null;
+    private ?ControllerInterface $controllerReference = null;
 
-    public function help(ControllerInterface $controller): void
+    public function __get(string $name): mixed
     {
-        $this->controller = &$controller;
-    }
-    */
+        if ($name === 'controller') {
+            if ($this->controllerReference instanceof ControllerInterface) {
+                return $this->controllerReference;
+            }
 
-    private function getController(): ControllerInterface
-    {
-        $backtraces = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-        //var_dump($backtraces);
-        if (!$backtraces[2]['object'] ?? null instanceof ControllerInterface) {
+            $traces = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+            foreach ($traces as $trace) {
+                if (($trace['object'] ?? null) instanceof ControllerInterface) {
+                    $this->controllerReference = &$trace['object'];
+                    return $this->controllerReference;
+                }
+            }
             throw new BadMethodCallException('The caller is not a controller');
         }
-        return $backtraces[2]['object'];
-    }
 
-    public function __get(string $name)
-    {
-        /*
-        echo "Getting '$name'\n";
-        if (array_key_exists($name, $this->data)) {
-            return $this->data[$name];
-        }
-        */
-        if ($name === 'controller') {
-            //return $this->getController();
-            // TODO: you SHOULD actually SEARCH for the first controller; DO NOY use a magic number!
-            // TODO: you would want to cache the controller
-            $backtraces = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-            var_dump($backtraces);
-            if (!($backtraces[2]['object'] ?? null instanceof ControllerInterface)) {
-                throw new BadMethodCallException('The caller is not a controller');
-            }
-            return $backtraces[2]['object'];
-        }
-
-        $trace = debug_backtrace();
+        // @see https://www.php.net/manual/ja/language.oop5.overloading.php#object.get
+        $traces = debug_backtrace();
         trigger_error(
             'Undefined property via __get(): ' . $name .
-                ' in ' . $trace[0]['file'] .
-                ' on line ' . $trace[0]['line'],
+                ' in ' . $traces[0]['file'] .
+                ' on line ' . $traces[0]['line'],
             E_USER_NOTICE
         );
         return null;

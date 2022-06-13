@@ -56,21 +56,10 @@ class ExampleHelper implements HelperInterface
 
     public function goBig(): void
     {
-        //var_dump($this->controller);
-        //$this->controller->message = strtoupper($this->controller->message);
-        //var_dump(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT));
-        /*
-        $backtraces = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-        if (!$backtraces[1]['object'] ?? null instanceof ControllerInterface) {
-            throw new BadMethodCallException('The caller is not a controller');
-        }
-        */
         /** @var ExampleController $controller */
-        //$controller = $backtraces[1]['object'];
-        //$controller = $this->getController();
-        $controller = $this->controller;
-        var_dump(get_class($controller));
-        $controller->message = strtoupper($controller->message);
+        //$controller = $this->controller;
+        //$controller->message = strtoupper($controller->message);
+        $this->controller->message = strtoupper($this->controller->message);
     }
 }
 
