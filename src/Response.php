@@ -20,6 +20,7 @@ class Response
     /** @var Cookie[] $cookies */
     public array $cookies = [];
     public string $body;
+    public array $debug = []; // readonly
 
     public function __construct(int $status = self::STATUS_OK, array $headers = [], string $body = '')
     {
@@ -31,5 +32,18 @@ class Response
     public static function createEmpty(): self
     {
         return new self();
+    }
+
+    public function debug(mixed $data): self
+    {
+        $trace = (debug_backtrace(2))[0];
+        //var_dump($trace);
+        $this->debug[] = [
+            'file' => $trace['file'],
+            'line' => $trace['line'],
+            'dump' => print_r($data, true),
+        ];
+
+        return $this;
     }
 }

@@ -80,17 +80,34 @@ class ExampleMiddleware3 implements MiddlewareInterface
     }
 }
 
+class DebugMiddleware implements MiddlewareInterface
+{
+    use MiddlewareTrait;
+
+    public function processResponse(Response $response): Response
+    {
+        foreach ($response->debug as $debug) {
+            $response->body .= sprintf("%s: %d\n%s", $debug['file'], $debug['line'], $debug['dump']);
+        }
+        $response->headers['Content-Length'] = strlen($response->body);
+        return $response;
+    }
+}
+
 class ExampleController1 implements ControllerInterface
 {
     use ControllerTrait;
 
     public function hello(Request $request): Response
     {
-        return new Response(
+        $response = new Response(
             Response::STATUS_OK,
             [],
             'Hello, world!'
         );
+        $response->debug('some debug info');
+
+        return $response;
     }
 }
 
@@ -109,7 +126,8 @@ $routes = [
 $middlewares = [
     new ExampleMiddleware1(),
     new ExampleMiddleware2(),
-    new ExampleMiddleware3(),
+    //new ExampleMiddleware3(),
+    new DebugMiddleware(),
 ];
 
 $server = new Server($routes, $middlewares, new ExampleErrorController());
