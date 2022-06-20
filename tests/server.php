@@ -89,7 +89,6 @@ class DebugMiddleware implements MiddlewareInterface
         foreach ($response->debug as $debug) {
             $response->body .= sprintf("%s: %d\n%s", $debug['file'], $debug['line'], $debug['dump']);
         }
-        $response->headers['Content-Length'] = strlen($response->body);
         return $response;
     }
 }

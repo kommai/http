@@ -17,7 +17,6 @@ class JsonView implements ViewInterface
         }
         $response->body = json_encode($this->data);
         $response->headers['Content-Type'] = 'application/json; charset=UTF-8';
-        $response->headers['Content-Length'] = strlen($response->body);
         return $response;
     }
 }

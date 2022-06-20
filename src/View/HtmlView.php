@@ -40,7 +40,6 @@ class HtmlView implements ViewInterface
         }
         $response->body = $this->html;
         $response->headers['Content-Type'] = 'text/html; charset=UTF-8';
-        $response->headers['Content-Length'] = strlen($response->body);
         return $response;
     }
 }

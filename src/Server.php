@@ -68,6 +68,7 @@ class Server
             for (; $depth >= 0; $depth--) {
                 $response = $this->middlewares[$depth]->processResponse($response);
             }
+            $response->headers['Content-Length'] = strlen($response->body);
             return $response;
         } catch (HttpException $thrown) {
             return $this->errorController->error($request, new LogicException(sprintf('Stupid throw of an %s', HttpException::class), 0, $thrown));
