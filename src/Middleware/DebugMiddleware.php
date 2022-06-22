@@ -71,9 +71,15 @@ EOH;
         background: #999;
         ">
 EOH;
-        foreach ($response->debug as $debug) {
+        /*        
+foreach ($response->debug as $debug) {
             $html .= sprintf('<div style="padding: 8px;">%s:%d</div>', $debug['file'], $debug['line']);
             $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', $debug['dump']);
+        }
+        */
+        foreach ($response->debug as $location => $dump) {
+            $html .= sprintf('<div style="padding: 8px;">%s</div>', $location);
+            $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', $dump);
         }
         $html .= <<<EOH
         </div>
@@ -103,9 +109,10 @@ EOH;
         return substr($sourceHtml, 0, $position) . $debugHtml . substr($sourceHtml, $position);
     }
 
-    private function injectDebugJson(string $sourceJson): string
+    private function injectDebugJson(string $sourceJson, array $debug): string
     {
-        // TODO: do stuff
-        return '';
+        $data = json_decode($sourceJson, true);
+        $data['debug'] = $debug;
+        return json_encode($data);
     }
 }

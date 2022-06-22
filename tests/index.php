@@ -35,7 +35,7 @@ $controller = new class(new HtmlView(new PHPTAL()), new JsonView()) implements C
         $response = new Response();
         $response->debug('This is the debug!');
         $response->debug($request->env, true);
-        $api = true;
+        //$api = true;
         if (isset($api) && $api) {
             $this->json->data = get_object_vars($request);
             return $this->json->toResponse($response);

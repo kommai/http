@@ -38,11 +38,14 @@ class Response
     {
         $trace = (debug_backtrace(2))[0];
         //var_dump($trace);
+        /*
         $this->debug[] = [
             'file' => $trace['file'],
             'line' => $trace['line'],
             'dump' => $detail ? var_export($data, true) : (string) $data,
         ];
+        */
+        $this->debug[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : (string) $data;
 
         return $this;
     }
