@@ -34,14 +34,14 @@ class Response
         return new self();
     }
 
-    public function debug(mixed $data): self
+    public function debug(mixed $data, bool $detail = false): self
     {
         $trace = (debug_backtrace(2))[0];
         //var_dump($trace);
         $this->debug[] = [
             'file' => $trace['file'],
             'line' => $trace['line'],
-            'dump' => print_r($data, true),
+            'dump' => $detail ? var_export($data, true) : (string) $data,
         ];
 
         return $this;

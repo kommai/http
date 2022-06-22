@@ -10,13 +10,15 @@ class JsonView implements ViewInterface
 {
     use ViewTrait;
 
+    public const MEDIA_TYPE = 'application/json; charset=UTF-8';
+
     public function toResponse(?Response $response = null): Response
     {
         if (is_null($response)) {
             $response = new Response();
         }
         $response->body = json_encode($this->data);
-        $response->headers['Content-Type'] = 'application/json; charset=UTF-8';
+        $response->headers['Content-Type'] = self::MEDIA_TYPE;
         return $response;
     }
 }

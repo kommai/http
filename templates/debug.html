@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Example Domain</title>
+    <title>Debug</title>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -101,12 +101,27 @@
             ⏱️ 1.23ms 🏋️ 123kb 🔗 123
         </div>
         <div style="
-        overflow: scroll;
+        overflow-y: scroll;
         background: #999;
-        padding: 8px;
         ">
-        <span>/path/to/src/SomeController.php:123</span>
-        <pre>array(3) {
+            <div style="padding: 8px;">/path/to/src/SomeController.php:123</div>
+            <pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">array(3) {
+        [0]=>
+        int(1)
+        [1]=>
+        int(2)
+        [2]=>
+        array(3) {
+        [0]=>
+        string(1) "a"
+        [1]=>
+        string(1) "b"
+        [2]=>
+        string(1) "c"
+        }
+        }</pre>
+            <div style="padding: 8px;">/path/to/src/SomeController.php:123</div>
+            <pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">array(3) {
         [0]=>
         int(1)
         [1]=>
