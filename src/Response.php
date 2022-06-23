@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kommai\Http;
 
+use Stringable;
+
 class Response
 {
     public const STATUS_OK = 200;
@@ -37,7 +39,7 @@ class Response
     public function dump(mixed $data, bool $detail = false): self
     {
         $trace = (debug_backtrace(2))[0];
-        $this->dumps[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : (string) $data;
+        $this->dumps[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : ($data instanceof Stringable ? (string) $data : gettype($data));
         return $this;
     }
 }
