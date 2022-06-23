@@ -14,7 +14,7 @@ class JsonView implements ViewInterface
 
     public function toResponse(?Response $response = null): Response
     {
-        if (is_null($response)) {
+        if ($response === null) {
             $response = new Response();
         }
         $response->body = json_encode($this->data);

@@ -37,7 +37,7 @@ class HtmlView implements ViewInterface
         if (!isset($this->html)) {
             throw new BadMethodCallException('Not rendered yet');
         }
-        if (is_null($response)) {
+        if ($response === null) {
             $response = new Response();
         }
         $response->body = $this->html;
