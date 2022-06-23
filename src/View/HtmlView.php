@@ -12,6 +12,8 @@ class HtmlView implements ViewInterface
 {
     use ViewTrait;
 
+    public const MEDIA_TYPE = 'text/html; charset=UTF-8';
+
     private PHPTAL $tal;
     private string $html;
 
@@ -39,8 +41,7 @@ class HtmlView implements ViewInterface
             $response = new Response();
         }
         $response->body = $this->html;
-        $response->headers['Content-Type'] = 'text/html; charset=UTF-8';
-        $response->headers['Content-Length'] = strlen($response->body);
+        $response->headers['Content-Type'] = self::MEDIA_TYPE;
         return $response;
     }
 }
