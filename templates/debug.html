@@ -90,21 +90,22 @@
         bottom: 0;
         width: 100vw;
         height: 50vh;
-        background: #333;
         font-family: monospace;
         font-size: 12px;
+        color: #222;
         ">
         <div style="
         background: #ccc;
         padding: 8px;
+        cursor: pointer;
         ">
-            ⏱️ 1.23ms 🏋️ 123kb 🔗 123
+            &#x23f1; 1.23 ms &#x1f3cb; 123 kb &#x1f517; 123
         </div>
         <div style="
         overflow-y: scroll;
-        background: #999;
+        background: #eee;
         ">
-            <div style="padding: 8px;">/path/to/src/SomeController.php:123</div>
+            <div style="padding: 8px; font-weight: bold;">/path/to/src/SomeController.php:123</div>
             <pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">array(3) {
         [0]=>
         int(1)
@@ -139,16 +140,19 @@
         </div>
     </div>
     <script>
-        console.log(getComputedStyle(document.body).getPropertyValue('margin-top'));
-        const debug = document.getElementById('kommai-debug');
-        //document.body.style.marginBottom = 'calc(' + getComputedStyle(debug).getPropertyValue('height') + ' + ' + parseInt(getComputedStyle(document.body).getPropertyValue('margin-bottom')) + 'px)';
-        document.body.style.marginBottom = 'calc(50vh + ' + parseInt(getComputedStyle(document.body).getPropertyValue('margin-bottom')) + 'px)';
-        const debugHeader = debug.children[0];
-        //console.log(debugHeader.offsetHeight);
-        const debugDump = debug.children[1];
-        console.log(debugDump);
-        debugDump.style.height = 'calc(50vh - ' + debugHeader.offsetHeight + 'px)';
-        console.log('calc(50vh - ' + debugHeader.offsetHeight + 'px)');
+        (() => {
+            const CONTAINER_HEIGHT = '50vh';
+            const container = document.getElementById('kommai-debug');
+            const header = container.children[0];
+            const dump = container.children[1];
+            const originalBodyMarginBottom = getComputedStyle(document.body).getPropertyValue('margin-bottom');
+            document.body.style.marginBottom = 'calc(' + CONTAINER_HEIGHT + ' + ' + originalBodyMarginBottom + ')';
+            dump.style.height = 'calc(' + CONTAINER_HEIGHT + ' - ' + header.offsetHeight + 'px)';
+            header.addEventListener('click', () => {
+                container.style.display = 'none';
+                document.body.style.marginBottom = originalBodyMarginBottom;
+            });
+        })();
     </script>
 </body>
 

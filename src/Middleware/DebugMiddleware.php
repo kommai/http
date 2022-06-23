@@ -15,7 +15,6 @@ class DebugMiddleware implements MiddlewareInterface
     use MiddlewareTrait;
 
     private float $start;
-    private float $end;
 
     public function processRequest(Request $request): Request
     {
@@ -25,94 +24,108 @@ class DebugMiddleware implements MiddlewareInterface
 
     public function processResponse(Response $response): Response
     {
-        $this->end = microtime(true);
+        $time = sprintf('%.2f ms', (microtime(true) - $this->start) * 1000);
+        $memory = sprintf('%d kb', memory_get_peak_usage() / 1024);
+        $includes = count(get_included_files());
 
         if ($response->headers['Content-Type'] === HtmlView::MEDIA_TYPE) {
-            $response->body = $this->injectDebugHtml($response->body, $this->generateDebugHtml(
-                $response,
-                ($this->end - $this->start) * 1000,
-                (int) floor(memory_get_peak_usage() / 1024),
-                count(get_included_files())
-            ));
+            $response->body = self::injectDebugHtml($response->body, $time, $memory, $includes, $response->dumps);
         }
 
         if ($response->headers['Content-Type'] === JsonView::MEDIA_TYPE) {
-            // TODO: what to do with JSON?
+            $response->body = self::injectDebugJson($response->body, $time, $memory, $includes, $response->dumps);
         }
 
         return $response;
     }
 
-    private function generateDebugHtml(Response $response, float $time, int $memory, int $includes): string
-    {
-        //return '<div id="kommai-debug"></div>';
+    private static function generateDebugHtml(
+        string $time,
+        string $memory,
+        int $includes,
+        array $dumps = [],
+    ): string {
         $html = <<<EOH
-<div id="kommai-debug" style="
+    <div id="kommai-debug" style="
         box-sizing: border-box;
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100vw;
         height: 50vh;
-        background: #333;
         font-family: monospace;
         font-size: 12px;
+        color: #222;
         ">
         <div style="
         background: #ccc;
         padding: 8px;
+        cursor: pointer;
         ">
 EOH;
-        $html .= sprintf('⏱️ %.2f ms 🏋️ %d kb 🔗 %d', $time, $memory, $includes);
+        $html .= sprintf('&#x23f1; %s &#x1f3cb; %s &#x1f517; %d', $time, $memory, $includes);
         $html .= <<<EOH
         </div>
         <div style="
         overflow-y: scroll;
-        background: #999;
+        background: #eee;
         ">
 EOH;
-        /*        
-foreach ($response->debug as $debug) {
-            $html .= sprintf('<div style="padding: 8px;">%s:%d</div>', $debug['file'], $debug['line']);
-            $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', $debug['dump']);
-        }
-        */
-        foreach ($response->debug as $location => $dump) {
-            $html .= sprintf('<div style="padding: 8px;">%s</div>', $location);
+        foreach ($dumps as $location => $dump) {
+            $html .= sprintf('<div style="padding: 8px; font-weight: bold;">%s</div>', $location);
             $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', $dump);
         }
         $html .= <<<EOH
         </div>
     </div>
     <script>
-        console.log(getComputedStyle(document.body).getPropertyValue('margin-top'));
-        const debug = document.getElementById('kommai-debug');
-        //document.body.style.marginBottom = 'calc(' + getComputedStyle(debug).getPropertyValue('height') + ' + ' + parseInt(getComputedStyle(document.body).getPropertyValue('margin-bottom')) + 'px)';
-        document.body.style.marginBottom = 'calc(50vh + ' + parseInt(getComputedStyle(document.body).getPropertyValue('margin-bottom')) + 'px)';
-        const debugHeader = debug.children[0];
-        //console.log(debugHeader.offsetHeight);
-        const debugDump = debug.children[1];
-        console.log(debugDump);
-        debugDump.style.height = 'calc(50vh - ' + debugHeader.offsetHeight + 'px)';
-        console.log('calc(50vh - ' + debugHeader.offsetHeight + 'px)');
+        (() => {
+            const CONTAINER_HEIGHT = '50vh';
+            const container = document.getElementById('kommai-debug');
+            const header = container.children[0];
+            const dump = container.children[1];
+            const originalBodyMarginBottom = getComputedStyle(document.body).getPropertyValue('margin-bottom');
+            document.body.style.marginBottom = 'calc(' + CONTAINER_HEIGHT + ' + ' + originalBodyMarginBottom + ')';
+            dump.style.height = 'calc(' + CONTAINER_HEIGHT + ' - ' + header.offsetHeight + 'px)';
+            header.addEventListener('click', () => {
+                container.style.display = 'none';
+                document.body.style.marginBottom = originalBodyMarginBottom;
+            });
+        })();
     </script>
 EOH;
         return $html;
     }
 
-    private function injectDebugHtml(string $sourceHtml, string $debugHtml): string
-    {
-        $position = strripos($sourceHtml, '</body>');
+    private static function injectDebugHtml(
+        string $targetHtml,
+        string $time,
+        string $memory,
+        int $includes,
+        array $dumps = [],
+    ): string {
+        $position = strripos($targetHtml, '</body>');
         if ($position === false) {
-            throw new InvalidArgumentException('Invalid source HTML which is missing </body> tag');
+            throw new InvalidArgumentException('Invalid target HTML which is missing </body> tag');
         }
-        return substr($sourceHtml, 0, $position) . $debugHtml . substr($sourceHtml, $position);
+        return substr($targetHtml, 0, $position) . self::generateDebugHtml($time, $memory, $includes, $dumps) . substr($targetHtml, $position);
     }
 
-    private function injectDebugJson(string $sourceJson, array $debug): string
-    {
-        $data = json_decode($sourceJson, true);
-        $data['debug'] = $debug;
+    private static function injectDebugJson(
+        string $targetJson,
+        string $time,
+        string $memory,
+        int $includes,
+        array $dumps = [],
+    ): string {
+        $data = json_decode($targetJson, true);
+        if ($data === null) {
+            throw new InvalidArgumentException('Invalid target JSON which could be broken');
+        }
+        $data['debug']['time'] = $time;
+        $data['debug']['memory'] = $memory;
+        $data['debug']['includes'] = $includes;
+        $data['debug']['dumps'] = $dumps;
         return json_encode($data);
     }
 }

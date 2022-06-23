@@ -21,6 +21,7 @@ class Response
     public array $cookies = [];
     public string $body;
     public array $debug = []; // readonly
+    public array $dumps = []; // readonly
 
     public function __construct(int $status = self::STATUS_OK, array $headers = [], string $body = '')
     {
@@ -47,6 +48,13 @@ class Response
         */
         $this->debug[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : (string) $data;
 
+        return $this;
+    }
+
+    public function dump(mixed $data, bool $detail = false): self
+    {
+        $trace = (debug_backtrace(2))[0];
+        $this->dumps[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : (string) $data;
         return $this;
     }
 }

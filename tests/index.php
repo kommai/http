@@ -33,8 +33,8 @@ $controller = new class(new HtmlView(new PHPTAL()), new JsonView()) implements C
     {
         //throw new RuntimeException('Test');
         $response = new Response();
-        $response->debug('This is the debug!');
-        $response->debug($request->env, true);
+        $response->dump('This is the debug!');
+        $response->dump($request->env, true);
         //$api = true;
         if (isset($api) && $api) {
             $this->json->data = get_object_vars($request);
