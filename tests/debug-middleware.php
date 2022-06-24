@@ -23,9 +23,17 @@ $html = file_get_contents(__DIR__ . '/../templates/index.html');
 $time = '0.123 ms';
 $memory = '123 kb';
 $includes = 123;
+/*
 $dumps = [
     '/path/to/file:123' => var_export(['one', 'two', 'three'], true),
     '/path/to/another/file:123' => var_export(['a', 'b', 'c'], true),
+];
+*/
+$dumps[] = [
+    'file' => '/path/to/file',
+    'line' => 123,
+    'data' => ['one', 'two', 'three'],
+    'detail' => false,
 ];
 
 $middlewareStaticProxy = new Proxy(DebugMiddleware::class);

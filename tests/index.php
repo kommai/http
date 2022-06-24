@@ -33,14 +33,14 @@ $controller = new class(new HtmlView(new PHPTAL()), new JsonView()) implements C
     {
         //throw new RuntimeException('Test');
         $response = new Response();
-        $response->dump(true);
+        $response->dump(true, false);
         $response->dump(123.45);
-        $response->dump('This is the debug!');
-        $response->dump([1, 2, 3]);
+        $response->dump('This is the debug!', false);
+        $response->dump([1, 2, 3], false);
         $response->dump($this);
         $response->dump(null);
         $response->dump($request->env, true);
-        $api = true;
+        //$api = true; // set false or comment for HTML
         if (isset($api) && $api) {
             $this->json->data = get_object_vars($request);
             return $this->json->toResponse($response);

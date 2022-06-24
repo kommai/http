@@ -39,6 +39,21 @@ class DebugMiddleware implements MiddlewareInterface
         return $response;
     }
 
+    private static function express(mixed $data, bool $detail = false): string
+    {
+        if ($detail) {
+            return var_export($data, true);
+        }
+        return match (gettype($data)) {
+            'boolean' => $data ? 'true' : 'false',
+            'integer', 'double', 'string' => $data,
+            'array' => sprintf('array (%d)', count($data)),
+            'object' => get_class($data),
+            'NULL' => 'null',
+            default => gettype($data),
+        };
+    }
+
     private static function generateDebugHtml(
         string $time,
         string $memory,
@@ -71,9 +86,9 @@ EOH;
         background: #eee;
         ">
 EOH;
-        foreach ($dumps as $location => $dump) {
-            $html .= sprintf('<div style="padding: 8px; font-weight: bold;">%s</div>', $location);
-            $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', $dump);
+        foreach ($dumps as $dump) {
+            $html .= sprintf('<div style="padding: 8px; font-weight: bold;">%s:%d</div>', $dump['file'], $dump['line']);
+            $html .= sprintf('<pre style="margin: 0; padding: 0 8px 8px 8px; border-bottom: 1px solid #ccc;">%s</pre>', htmlspecialchars(self::express($dump['data'], $dump['detail'])));
         }
         $html .= <<<EOH
         </div>
@@ -125,7 +140,10 @@ EOH;
         $data['debug']['time'] = $time;
         $data['debug']['memory'] = $memory;
         $data['debug']['includes'] = $includes;
-        $data['debug']['dumps'] = $dumps;
+        //$data['debug']['dumps'] = $dumps;
+        foreach ($dumps as $dump) {
+            $data['debug']['dumps'][sprintf('%s:%d', $dump['file'], $dump['line'])] = $dump['data'];
+        }
         return json_encode($data);
     }
 }
