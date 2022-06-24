@@ -39,7 +39,15 @@ class Response
     public function dump(mixed $data, bool $detail = false): self
     {
         $trace = (debug_backtrace(2))[0];
-        $this->dumps[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : ($data instanceof Stringable ? (string) $data : gettype($data));
+        $this->dumps[sprintf('%s:%d', $trace['file'], $trace['line'])] = $detail ? var_export($data, true) : match (gettype($data)) {
+            'boolean' => $data ? 'true' : 'false',
+            'integer', 'double', 'string' => $data,
+            'array' => sprintf('array (%d)', count($data)),
+            'object' => get_class($data),
+            'NULL' => 'null',
+            default => gettype($data),
+        };
+
         return $this;
     }
 }
