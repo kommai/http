@@ -40,7 +40,7 @@ class Response
         $this->dumps[] = [
             'file' => $trace['file'],
             'line' => $trace['line'],
-            'data' => $data,
+            'data' => is_object($data) ? get_object_vars($data) : $data,
             'detail' => $detail,
         ];
         return $this;
