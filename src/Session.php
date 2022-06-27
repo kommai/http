@@ -30,10 +30,11 @@ class Session
         }
     }
 
-    public function renew(): self
+    public function renew(): void
     {
-        session_regenerate_id();
+        if (session_regenerate_id() === false) {
+            throw new RuntimeException('Failed to renew the session');
+        }
         $this->id = session_id();
-        return $this;
     }
 }
