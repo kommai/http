@@ -55,10 +55,13 @@ class Server
                 for ($depth = 0; $depth < count($this->middlewares); $depth++) {
                     $request = $this->middlewares[$depth]->processRequest($request);
                 }
-                if (!method_exists($route->controller, $route->action)) {
+                if (isset($route->action) && !method_exists($route->controller, $route->action)) {
                     throw new BadMethodCallException(sprintf('Call to an undefined action "%s" on %s', $route->action, get_class($route->controller)));
                 }
-                $response = call_user_func([$route->controller, $route->action], $request, $route->params);
+                if (!isset($route->action) && !is_callable($route->controller)) {
+                    throw new BadMethodCallException(sprintf('%s is not callable', get_class($route->controller)));
+                }
+                $response = call_user_func(isset($route->action) ? [$route->controller, $route->action] : $route->controller, $request, $route->params);
             } catch (HttpException $thrown) {
                 $response = $this->errorController->error($request, $thrown);
             }
