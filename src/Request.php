@@ -63,6 +63,15 @@ class Request
         );
     }
 
+    private static function makeUploadsBetter(array $stockFiles): array
+    {
+        foreach ($stockFiles as $key => [$name]) {
+
+        }
+        $uploads = $stockFiles;
+        return $uploads;
+    }
+
     public static function createFromGlobals(): self
     {
         $method = strtoupper($_SERVER['REQUEST_METHOD']);
@@ -75,6 +84,7 @@ class Request
         $cookies = $_COOKIE;
         $inputs = $_POST;
         $queries = $_GET;
+        //$uploads = self::makeUploadsBetter($_FILES);
         $uploads = $_FILES;
         $env = [];
         foreach ($_SERVER as $key => $value) {
