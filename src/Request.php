@@ -66,22 +66,46 @@ class Request
     public static function createFromGlobals(): self
     {
         $method = strtoupper($_SERVER['REQUEST_METHOD']);
+
         $url = $_SERVER['REQUEST_URI'];
+
         $protocol = $_SERVER['SERVER_PROTOCOL'];
+
         $headers = [];
         foreach (getallheaders() as $key => $value) {
             $headers[ucwords($key, '-')] = $value;
         }
+
         $cookies = $_COOKIE;
+
         $inputs = $_POST;
+
         $queries = $_GET;
-        $uploads = $_FILES;
+
+        $uploads = [];
+        foreach ($_FILES as $key => $file) {
+            if (is_array($file['error'])) {
+                for ($i = 0; $i < count($file['error']); $i++) {
+                    $uploads[$key][$i] = new Upload(
+                        $file['name'][$i],
+                        $file['type'][$i],
+                        $file['tmp_name'][$i],
+                        $file['error'][$i],
+                        $file['size'][$i],
+                    );
+                }
+                continue;
+            }
+            $uploads[$key] = Upload::createFromGlobal($file);
+        }
+
         $env = [];
         foreach ($_SERVER as $key => $value) {
             if (strpos($key, 'HTTP_') !== 0) {
                 $env[$key] = $value;
             }
         }
+
         return new self($method, $url, $protocol, $headers, $cookies, $inputs, $queries, $uploads, $env);
     }
 
