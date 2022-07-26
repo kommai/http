@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Kommai\Http;
 
+use InvalidArgumentException;
+
 class Request
 {
     public string $method; // readonly
@@ -13,8 +15,24 @@ class Request
     public array $cookies; // readonly
     public array $inputs; // readonly
     public array $queries; // readonly
-    public array $uploads; // readonly Array of Upload instances
+    public array $uploads; // readonly
     public array $env; // readonly
+
+    private static function getMaxPostSize()
+    {
+    }
+
+    // TODO: work on it
+    // do I need to declare this so you can use it anyware?
+    private static function parseIniValue(string $name): ?int
+    {
+        $iniValue = ini_get($name);
+        if ($iniValue === false) {
+            throw new InvalidArgumentException(sprintf('"%s" directive is unavailable in php.ini', $name));
+        }
+
+        return 0;
+    }
 
     public function __construct(
         string $method,
@@ -38,6 +56,7 @@ class Request
         $this->env = $env;
     }
 
+    // NOTE: Do I need this when it has its constructor?
     public static function createFromScratch(
         string $method,
         string $url,
