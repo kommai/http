@@ -54,5 +54,7 @@ class Upload
         if (@move_uploaded_file($this->temp, $path) === false) {
             throw new RuntimeException('The uploaded file was refused');
         }
+
+        chmod($path, 0644);
     }
 }

@@ -9,6 +9,7 @@ use Kommai\Http\Exception\HttpException;
 use Kommai\Http\Request;
 use Kommai\Http\Response;
 use Kommai\Http\Server;
+use Kommai\Http\Upload;
 use Kommai\Http\View\JsonView;
 use Kommai\TestKit\Proxy;
 
@@ -27,6 +28,13 @@ $controller = new class(new JsonView()) implements ControllerInterface
     {
         //$this->view->data['request'] = get_object_vars($request);
         $this->view->data['uploads'] = $request->uploads;
+
+        foreach ($request->uploads as $key => $upload) {
+            if ($upload instanceof Upload) {
+                $this->view->data[$key]['mime'] = mime_content_type($upload->temp);
+            }
+        }
+
         $response = $this->view->toResponse();
         return $response;
     }

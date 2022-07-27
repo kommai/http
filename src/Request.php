@@ -104,6 +104,8 @@ class Request
         $uploads = [];
         foreach ($_FILES as $key => $file) {
             if (is_array($file['error'])) {
+                                // TODO: throw bad request if the error is not set
+
                 for ($i = 0; $i < count($file['error']); $i++) {
                     $uploads[$key][$i] = new Upload(
                         $file['name'][$i],
@@ -115,6 +117,8 @@ class Request
                 }
                 continue;
             }
+                            // TODO: throw bad request if the error is not set
+
             $uploads[$key] = Upload::createFromGlobal($file);
         }
 
