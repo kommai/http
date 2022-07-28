@@ -15,7 +15,8 @@
         "phptal/phptal": ">=1.6"
     },
     "require-dev": {
-        "kommai/testkit": "dev-main"
+        "kommai/testkit": "dev-main",
+        "kommai/validation": "dev-main"
     },
     "autoload": {
         "psr-4": {
@@ -27,6 +28,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/kommai/testkit"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/kommai/validation"
         }
     ]
 }

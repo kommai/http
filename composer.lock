@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "417d7bb7607f74ef346a63ddc30fe691",
+    "content-hash": "c0482c0738fcc08b08a57b68f95817e0",
     "packages": [
         {
             "name": "phptal/phptal",
@@ -107,12 +107,59 @@
                 "issues": "https://github.com/kommai/testkit/issues"
             },
             "time": "2022-03-30T00:17:45+00:00"
+        },
+        {
+            "name": "kommai/validation",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kommai/validation.git",
+                "reference": "9d2c0ae46e98c4d992eea1b7f8cc22eaa94913ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kommai/validation/zipball/9d2c0ae46e98c4d992eea1b7f8cc22eaa94913ec",
+                "reference": "9d2c0ae46e98c4d992eea1b7f8cc22eaa94913ec",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "kommai/http": "dev-main",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "kommai/testkit": "dev-main"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kommai\\Validation\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "The Kommai Toolkit",
+                    "email": "dev@kommai.app"
+                }
+            ],
+            "description": "The kommai validation library",
+            "homepage": "https://github.com/kommai/validation",
+            "support": {
+                "source": "https://github.com/kommai/validation/tree/main",
+                "issues": "https://github.com/kommai/validation/issues"
+            },
+            "time": "2022-07-28T07:09:38+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "kommai/testkit": 20
+        "kommai/testkit": 20,
+        "kommai/validation": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
