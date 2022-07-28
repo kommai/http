@@ -6,10 +6,14 @@ namespace Kommai\Http;
 
 use BadMethodCallException;
 use DomainException;
+use InvalidArgumentException;
 use Kommai\Http\Controller\ErrorControllerInterface;
+use Kommai\Http\Exception\BadRequestException;
 use Kommai\Http\Exception\HttpException;
 use Kommai\Http\Exception\NotFoundException;
+use Kommai\Http\Exception\PayloadTooLargeException;
 use Kommai\Http\Middleware\MiddlewareInterface;
+use Kommai\Http\Middleware\MiddlewareTrait;
 use LogicException;
 use Throwable;
 
@@ -50,6 +54,41 @@ class Server
         if (!$route) {
             return $this->errorController->error($request, new NotFoundException('No route matched'));
         }
+
+        // TODO: is this good to be here?
+        $essentialMiddleware = new class implements MiddlewareInterface
+        {
+            use MiddlewareTrait;
+
+            // NOTE: move to elsewhere if something else needs this
+            private static function iniValueToBytes(string $name): int
+            {
+                $iniValue = ini_get($name);
+                if ($iniValue === false) {
+                    throw new InvalidArgumentException(sprintf('"%s" directive is unavailable in php.ini', $name));
+                }
+
+                // @see https://www.php.net/manual/ja/function.ini-get
+                return match (strtoupper(substr(trim($iniValue), -1))) {
+                    'K' => (int) $iniValue * 1024,
+                    'M' => (int) $iniValue * 1024 * 1024,
+                    'G' => (int) $iniValue * 1024 * 1024 * 1024,
+                    default => (int) $iniValue,
+                };
+            }
+
+            public function processRequest(Request $request): Request
+            {
+                //throw new HttpException('test');
+                if ($request->isPost() && $request->headers['Content-Length'] > self::iniValueToBytes('post_max_size')) {
+                    throw new PayloadTooLargeException('');
+                }
+
+                return $request;
+            }
+        };
+        array_unshift($this->middlewares, $essentialMiddleware);
+
         try {
             try {
                 for ($depth = 0; $depth < count($this->middlewares); $depth++) {

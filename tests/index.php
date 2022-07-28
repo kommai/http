@@ -57,7 +57,7 @@ $errorController = new class implements ErrorControllerInterface
     {
         $response = new Response();
         $response->status = $thrown instanceof HttpException ? $thrown->getCode() : 500;
-        $response->body = sprintf('<html><body><h1>%s</h1><pre>%s</pre></body></html>', get_class($thrown), $thrown->__toString());
+        $response->body = sprintf('<html><body><h1>😩 %s</h1><pre>%s</pre></body></html>', get_class($thrown), $thrown->__toString());
         return $response;
     }
 };

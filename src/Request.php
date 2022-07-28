@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kommai\Http;
 
 use InvalidArgumentException;
+use Kommai\Http\Exception\PayloadTooLargeException;
 
 class Request
 {
@@ -17,22 +18,6 @@ class Request
     public array $queries; // readonly
     public array $uploads; // readonly
     public array $env; // readonly
-
-    private static function getMaxPostSize()
-    {
-    }
-
-    // TODO: work on it
-    // do I need to declare this so you can use it anyware?
-    private static function parseIniValue(string $name): ?int
-    {
-        $iniValue = ini_get($name);
-        if ($iniValue === false) {
-            throw new InvalidArgumentException(sprintf('"%s" directive is unavailable in php.ini', $name));
-        }
-
-        return 0;
-    }
 
     public function __construct(
         string $method,
@@ -104,7 +89,7 @@ class Request
         $uploads = [];
         foreach ($_FILES as $key => $file) {
             if (is_array($file['error'])) {
-                                // TODO: throw bad request if the error is not set
+                // TODO: throw bad request if the error is not set
 
                 for ($i = 0; $i < count($file['error']); $i++) {
                     $uploads[$key][$i] = new Upload(
@@ -117,7 +102,7 @@ class Request
                 }
                 continue;
             }
-                            // TODO: throw bad request if the error is not set
+            // TODO: throw bad request if the error is not set
 
             $uploads[$key] = Upload::createFromGlobal($file);
         }
