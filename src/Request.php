@@ -18,6 +18,7 @@ class Request
     public array $queries; // readonly
     public array $uploads; // readonly
     public array $env; // readonly
+    public ?object $user;
 
     public function __construct(
         string $method,
@@ -29,6 +30,7 @@ class Request
         array $queries = [],
         array $uploads = [],
         array $env = [],
+        ?object $user = null,
     ) {
         $this->method = $method;
         $this->url = $url;
@@ -39,6 +41,7 @@ class Request
         $this->queries = $queries;
         $this->uploads = $uploads;
         $this->env = $env;
+        $this->user = $user;
     }
 
     // NOTE: Do I need this when it has its constructor?
@@ -53,6 +56,7 @@ class Request
         array $queries = [],
         array $uploads = [],
         array $env = [],
+        ?object $user = null,
     ): self {
         return new self(
             $method,
@@ -64,6 +68,7 @@ class Request
             $queries,
             $uploads,
             $env,
+            $user,
         );
     }
 
