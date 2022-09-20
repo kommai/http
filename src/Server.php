@@ -110,6 +110,7 @@ class Server
             for (; $depth >= 0; $depth--) {
                 $response = $this->middlewares[$depth]->processResponse($response);
             }
+            // TODO: this could be in essential middleware's processResponse?
             $response->headers['Content-Length'] = strlen($response->body);
             return $response;
         } catch (HttpException $thrown) {
