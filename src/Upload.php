@@ -34,12 +34,14 @@ class Upload
         return new self($file['name'], $file['type'], $file['tmp_name'], $file['error'], $file['size']);
     }
 
-    public function save(string $path): void
+    public function save(string $path): string
     {
         if (@move_uploaded_file($this->temp, $path) === false) {
             throw new RuntimeException('The uploaded file was refused');
         }
 
         chmod($path, 0644);
+
+        return realpath($path);
     }
 }
