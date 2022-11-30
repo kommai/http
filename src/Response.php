@@ -14,6 +14,7 @@ class Response
     public const STATUS_NOT_FOUND = 404;
     public const STATUS_PAYLOAD_TOO_LARGE = 413;
     public const STATUS_UNPROCESSABLE_ENTITY = 422;
+    public const STATUS_TOO_MANY_REQUESTS = 429;
     public const STATUS_INTERNAL_SERVER_ERROR = 500;
     public const STATUS_SERVICE_UNAVAILABLE = 503;
 
